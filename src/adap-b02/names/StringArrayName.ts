@@ -11,7 +11,7 @@ export class StringArrayName implements Name {
         this.components = source;
     }
 
-    public asString(delimiter: string = this.delimiter): string {let res: string = "";
+    public asString(delimiter: string = this.delimiter): string {;
         return this.components.join(delimiter);
     }
 

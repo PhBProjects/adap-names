@@ -9,63 +9,95 @@ export class StringName extends AbstractName {
 
     constructor(source: string, delimiter?: string) {
         super();
-        throw new Error("needs implementation or deletion");
+        this.name = source;
+        this.delimiter = delimiter ?? DEFAULT_DELIMITER;
+        this.calcNoComponents();
     }
 
     public clone(): Name {
-        throw new Error("needs implementation or deletion");
+        throw new StringName(this.name, this.delimiter);
     }
 
-    public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
+    public asString(delimiter: string = DEFAULT_DELIMITER): string {
+        return this.name.replaceAll(this.delimiter, delimiter);
     }
+
 
     public asDataString(): string {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public isEqual(other: Name): boolean {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public getHashCode(): number {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public isEmpty(): boolean {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public getDelimiterCharacter(): string {
-        throw new Error("needs implementation or deletion");
+        let res: string = "";
+        for(let i = 0; i < this.name.length; i++) {
+            if(this.name[i] === this.delimiter || this.name[i] === ESCAPE_CHARACTER){
+                res += ESCAPE_CHARACTER;
+            }
+            res += this.name[i];
+        }
+        return res;
     }
 
     public getNoComponents(): number {
-        throw new Error("needs implementation or deletion");
+        return this.noComponents;
     }
 
-    public getComponent(i: number): string {
-        throw new Error("needs implementation or deletion");
+    public calcNoComponents(): void {
+        if(this.name.length == 0){
+            this.noComponents = 0;
+        }
+        let res = 1;
+        for(let c of this.name){
+            if(c === this.delimiter){
+                res++;
+            }
+        }
+        this.noComponents = res;
     }
 
-    public setComponent(i: number, c: string) {
-        throw new Error("needs implementation or deletion");
+    public getComponent(x: number): string {
+        const components = this.name.split(this.delimiter);
+        if (x < 0 || x >= components.length) {
+            throw new Error("Index out of bounds");
+        }
+        return components[x];
+
     }
 
-    public insert(i: number, c: string) {
-        throw new Error("needs implementation or deletion");
+    public setComponent(n: number, c: string): void {
+        let components: string [] = this.name.split(this.delimiter);
+        if (n < 0 || n >= components.length) {
+            throw new Error("Index out of bounds");
+        }
+        components[n] = c;
+        this.name = components.join(this.delimiter);
     }
 
-    public append(c: string) {
-        throw new Error("needs implementation or deletion");
+    public insert(n: number, c: string): void {
+        let components: string [] = this.name.split(this.delimiter);
+        components.splice(n, 0, c);
+        this.name = components.join(this.delimiter);
+        this.noComponents++;
     }
 
-    public remove(i: number) {
-        throw new Error("needs implementation or deletion");
+    public append(c: string): void {
+        this.name += this.delimiter;
+        this.name += c;
+        this.noComponents++;
+    }
+
+    public remove(n: number): void{
+        let components: string [] = this.name.split(this.delimiter);
+        if (n < 0 || n >= components.length) {
+            throw new Error("Index out of bounds");
+        }
+
+        components.splice(n, 1,);
+        this.name = components.join(this.delimiter);
+        this.noComponents--;
     }
 
     public concat(other: Name): void {
-        throw new Error("needs implementation or deletion");
+        console.log("StringName concat attempt")
+        this.name += this.delimiter;
+        this.name += other.asString(this.delimiter)
+        this.calcNoComponents();
     }
 
 }
